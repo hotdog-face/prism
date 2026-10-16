@@ -1,0 +1,10 @@
+[Unit]
+Description=Nightly ES-DE scrape + boot tests at 23:20 (after the owner goes to bed)
+
+[Timer]
+OnCalendar=*-*-* 23:20:00
+Persistent=false
+WakeSystem=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,11 @@
+<!-- movies: Plex titles in Prism as a cover flow (2026-10-08). plex_sync.py puts the title shown here in
+     <developer> (folders like Discover shelves carry hidden sort names in <name>). -->
+<theme>
+    <include>./_count_movies.xml</include>
+    <include>./_coverflow.xml</include>
+    <view name="gamelist">
+        <text name="gameTitle">
+            <metadata>developer</metadata>
+        </text>
+    </view>
+</theme>

@@ -1,0 +1,10 @@
+<!-- Prism (was Prism): console-style home for the Deck - games, movies, TV and music; neon low-poly look -->
+<themeCapabilities>
+    <themeName>Prism</themeName>
+    <aspectRatio>16:10</aspectRatio>
+    <aspectRatio>16:9</aspectRatio>
+    <variant name="home">
+        <label language="en_US">Prism</label>
+        <selectable>true</selectable>
+    </variant>
+</themeCapabilities>

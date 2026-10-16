@@ -1,0 +1,12 @@
+<!-- Prism navigation sounds "Glass" (installed 2026-10-09: soft F maj9 sine bells; previous set in sounds_old_20261009/) -->
+<theme>
+    <view name="all">
+        <sound name="systembrowse"><path>./sounds/systembrowse.wav</path></sound>
+        <sound name="quicksysselect"><path>./sounds/quicksysselect.wav</path></sound>
+        <sound name="select"><path>./sounds/select.wav</path></sound>
+        <sound name="back"><path>./sounds/back.wav</path></sound>
+        <sound name="scroll"><path>./sounds/scroll.wav</path></sound>
+        <sound name="favorite"><path>./sounds/favorite.wav</path></sound>
+        <sound name="launch"><path>./sounds/launch.wav</path></sound>
+    </view>
+</theme>

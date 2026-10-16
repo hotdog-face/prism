@@ -1,0 +1,19 @@
+#!/bin/bash
+# Prism launcher: Steam's "Prism" shortcut runs this. ES-DE with Prism's own data folder (@ESDE@), so the user's
+# normal ES-DE setup is never touched. ESDE_APPDATA_DIR (not --home): ES-DE then still knows the real home folder,
+# which its emulator find rules (~/.local/share/flatpak/...) depend on. Written by ~/prism/install/setup.py.
+# Mirrors EmuDeck's own ES-DE launcher: startup cover first (in the foreground: it returns at once, and a background
+# child left behind under ES-DE made Prism think a game was running), EmuDeck Cloud Sync around ES-DE when it's on.
+echo "$(date +%T) start $*" >> /tmp/esde_wrapper.log
+/usr/bin/python3 "@PRISM_DIR@/prism_boot_cover.py" >/dev/null 2>&1 < /dev/null
+export ESDE_APPDATA_DIR="@ESDE@"
+EMUDECK="$HOME/.config/EmuDeck/backend/functions/all.sh"
+if grep -qsE '^cloud_sync_status="?true' "$HOME/.config/EmuDeck/settings.sh" && [ -f "$EMUDECK" ]; then
+    . "$EMUDECK"
+    cloud_sync_downloadEmuAll && cloud_sync_startService
+    "@APP@/usr/bin/es-de" --no-splash "$@" 2>>/tmp/esde_wrapper.log
+    cloud_sync_uploadForced
+    rm -rf "$savesPath/.gaming"
+else
+    exec "@APP@/usr/bin/es-de" --no-splash "$@" 2>>/tmp/esde_wrapper.log
+fi

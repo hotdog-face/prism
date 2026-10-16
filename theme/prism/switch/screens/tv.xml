@@ -1,0 +1,12 @@
+<!-- tv: Plex shows in Prism as a cover flow (2026-10-08). ES-DE sorts folders only by <name>, so plex_sync.py
+     writes a hidden sort key there ("003 Andor": unwatched first, newest episode first) and the real title in
+     <developer>, which is what the title line shows here. -->
+<theme>
+    <include>./_count_tv.xml</include>
+    <include>./_coverflow.xml</include>
+    <view name="gamelist">
+        <text name="gameTitle">
+            <metadata>developer</metadata>
+        </text>
+    </view>
+</theme>

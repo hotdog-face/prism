@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Uninstall Prism
+Comment=Remove Prism from this Steam Deck
+Icon=edit-delete
+Exec=sh -c 'exec bash "$(dirname "$1")/uninstall.sh"' sh %k
+Terminal=false

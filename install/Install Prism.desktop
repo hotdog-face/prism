@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Install Prism
+Comment=Install Prism, a console-style home screen for the Steam Deck
+Icon=system-software-install
+Exec=sh -c 'exec bash "$(dirname "$1")/install.sh"' sh %k
+Terminal=false

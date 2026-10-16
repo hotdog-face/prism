@@ -1,0 +1,18 @@
+<theme>
+    <view name="system">
+        <text name="gameCount"><visible>false</visible></text>
+        <text name="mediaCount">
+            <pos>0.5 0.765</pos>
+            <size>0.30 0.05</size>
+            <origin>0.5 0.5</origin>
+            <text>459 movies</text>
+            <fontPath>./../NotoSans-Regular.ttf</fontPath>   <!-- relative to screens/ (the theme fontBody variable resolved to screens/switch/) -->
+            <fontSize>0.03</fontSize>
+            <horizontalAlignment>center</horizontalAlignment>
+            <color>${inkSoft}</color>
+            <backgroundColor>${cardSolid}</backgroundColor>
+            <backgroundCornerRadius>0.02</backgroundCornerRadius>
+            <zIndex>50</zIndex>
+        </text>
+    </view>
+</theme>

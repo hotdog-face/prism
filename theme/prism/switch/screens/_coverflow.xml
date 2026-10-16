@@ -1,0 +1,95 @@
+<!-- Cover flow for Movies / TV (2026-10-08): posters scroll left-right, the film's artwork fills the screen
+     behind them, title / year / rating / summary on top. Included by movies.xml and tv.xml.
+     The carousel is named "aaCoverFlow" so ES-DE meets it before the theme's "gamelistTextlist" and uses it as this
+     view's list (only one list primitive per view is used). Paths here are relative to switch/screens/. -->
+<theme>
+    <view name="gamelist">
+        <image name="flowBackdrop">
+            <pos>0 0</pos>
+            <size>1 1</size>
+            <imageType>fanart</imageType>
+            <scrollFadeIn>true</scrollFadeIn>
+            <zIndex>3</zIndex>
+        </image>
+        <image name="flowShade">
+            <pos>0 0</pos>
+            <size>1 1</size>
+            <path>./../../assets/coverflow_shade.png</path>
+            <zIndex>4</zIndex>
+        </image>
+        <carousel name="aaCoverFlow">
+            <pos>0 0.32</pos>
+            <size>1 0.6</size>
+            <type>horizontal</type>
+            <color>00000000</color>
+            <maxItemCount>5</maxItemCount>
+            <imageType>cover</imageType>
+            <itemSize>0.18 0.43</itemSize>
+            <itemScale>1.2</itemScale>
+            <itemsBeforeCenter>4</itemsBeforeCenter>
+            <itemsAfterCenter>4</itemsAfterCenter>
+            <selectedItemMargins>0.02 0.02</selectedItemMargins>
+            <imageFit>cover</imageFit>
+            <imageCornerRadius>0.008</imageCornerRadius>
+            <reflections>false</reflections>
+            <reflectionsOpacity>0.2</reflectionsOpacity>
+            <reflectionsFalloff>1</reflectionsFalloff>
+            <unfocusedItemDimming>0.5</unfocusedItemDimming>
+            <unfocusedItemSaturation>0.75</unfocusedItemSaturation>
+            <itemTransitions>animate</itemTransitions>
+            <textColor>FFFFFF</textColor>
+            <textBackgroundColor>2E2E2AFF</textBackgroundColor>
+            <fontPath>./../NotoSans-Medium.ttf</fontPath>
+            <fontSize>0.028</fontSize>
+            <zIndex>30</zIndex>
+        </carousel>
+        <textlist name="gamelistTextlist">
+            <pos>2 2</pos>
+            <size>0.1 0.1</size>
+        </textlist>
+        <image name="card"><visible>false</visible></image>
+        <image name="gameCover"><visible>false</visible></image>
+        <image name="gamePlayersIcon"><visible>false</visible></image>
+        <image name="curateLegend">
+            <pos>0.95 0.268</pos>
+            <origin>1 0.5</origin>
+            <maxSize>0.34 0.03</maxSize>
+            <zIndex>40</zIndex>
+        </image>
+        <badges name="badges"><visible>false</visible></badges>
+        <video name="gameVideo"><visible>false</visible></video>
+        <text name="gameTitle">
+            <pos>0.05 0.17</pos>
+            <size>0.75 0.07</size>
+            <fontPath>./../NotoSans-Medium.ttf</fontPath>
+            <fontSize>0.055</fontSize>
+            <zIndex>40</zIndex>
+        </text>
+        <text name="gameGenre">
+            <pos>0.05 0.232</pos>
+            <size>0.42 0.035</size>
+            <zIndex>40</zIndex>
+        </text>
+        <text name="gamePlayers">
+            <pos>0.05 0.268</pos>
+            <size>0.6 0.035</size>
+            <origin>0 0.5</origin>
+            <horizontalAlignment>left</horizontalAlignment>
+            <color>FFFFFF</color>
+            <zIndex>40</zIndex>
+        </text>
+        <datetime name="gameYear">
+            <visible>false</visible>
+            <pos>0.205 0.268</pos>
+            <size>0.1 0.035</size>
+            <origin>0 0.5</origin>
+            <horizontalAlignment>left</horizontalAlignment>
+            <zIndex>40</zIndex>
+        </datetime>
+        <text name="gameDesc">
+            <pos>0.05 0.295</pos>
+            <size>0.6 0.06</size>
+            <zIndex>40</zIndex>
+        </text>
+    </view>
+</theme>

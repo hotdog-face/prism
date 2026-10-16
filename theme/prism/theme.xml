@@ -1,0 +1,459 @@
+<!--
+    Prism for ES-DE (formerly Prism; the folder keeps its old name so settings and paths stay valid)
+    Look modelled on the Nintendo Switch HOME menu in dark mode, on black with a slow animated backdrop:
+    console tiles with photos, cyan selection, a round icon row (Controllers / Settings / Power).
+    Game lists put the gameplay video first and the box cover second.
+    L / R (shoulder buttons) jump between consoles; the header shows it.
+-->
+<theme>
+    <variables>
+        <canvas>1C1C1A</canvas>
+        <ink>FFFFFF</ink>
+        <inkSoft>A9A9AE</inkSoft>
+        <rule>34342F</rule>
+        <cyan>27B6D5</cyan>
+        <cyanDeep>FBE01A</cyanDeep>
+        <card>1E1E1BE6</card>
+        <cardSolid>282825</cardSolid>
+        <select>34342F</select>
+        <pixel>./switch/pixel.png</pixel>
+        <fontBody>./switch/NotoSans-Regular.ttf</fontBody>
+        <fontLight>./switch/NotoSans-Medium.ttf</fontLight>
+    </variables>
+
+    <variant name="all">
+        <view name="system, gamelist">
+            <clock name="clock">
+                <pos>0.86 0.06</pos>
+                <size>0.10 0.04</size>
+                <origin>1 0.5</origin>
+                <fontPath>${fontBody}</fontPath>
+                <fontSize>0.032</fontSize>
+                <horizontalAlignment>right</horizontalAlignment>
+                <color>${ink}</color>
+                <format>%I:%M %p</format>
+            </clock>
+            <systemstatus name="systemStatus">
+                <pos>0.965 0.06</pos>
+                <height>0.034</height>
+                <origin>1 0.5</origin>
+                <fontPath>${fontBody}</fontPath>
+                <color>${ink}</color>
+            </systemstatus>
+            <image name="ruleBottom">
+                <pos>0.035 0.885</pos>
+                <size>0.93 0.0018</size>
+                <path>${pixel}</path>
+                <color>${rule}</color>
+                <zIndex>5</zIndex>
+            </image>
+            <helpsystem name="help">
+                <pos>0.965 0.94</pos>
+                <origin>1 0.5</origin>
+                <textColor>${ink}</textColor>
+                <iconColor>${ink}</iconColor>
+                <fontPath>./switch/NotoSans-Medium.ttf</fontPath>
+                <fontSize>0.029</fontSize>
+                <letterCase>capitalize</letterCase>
+                <entrySpacing>0.028</entrySpacing>
+                <iconTextSpacing>0.008</iconTextSpacing>
+                <!-- Switch / console-style hint badges (2026-10-08, rendered by agent; deck_curate maps taps on them) -->
+                <customButtonIcon button="button_a_XBOX">./assets/help/button_a.png</customButtonIcon>
+                <customButtonIcon button="button_b_XBOX">./assets/help/button_b.png</customButtonIcon>
+                <customButtonIcon button="button_x_XBOX">./assets/help/button_x.png</customButtonIcon>
+                <customButtonIcon button="button_y_XBOX">./assets/help/button_y.png</customButtonIcon>
+                <customButtonIcon button="button_lr">./assets/help/button_lr.png</customButtonIcon>
+                <customButtonIcon button="thumbstick_click">./assets/help/thumbstick_click.png</customButtonIcon>
+                <customButtonIcon button="dpad_all">./assets/help/dpad_all.png</customButtonIcon>
+                <customButtonIcon button="dpad_updown">./assets/help/dpad_updown.png</customButtonIcon>
+                <customButtonIcon button="dpad_leftright">./assets/help/dpad_leftright.png</customButtonIcon>
+                <customButtonIcon button="button_back_XBOX">./assets/blank.svg</customButtonIcon>
+                <customButtonIcon button="button_start_XBOX">./assets/blank.svg</customButtonIcon>
+                <customButtonIcon button="button_back_XBOX360">./assets/blank.svg</customButtonIcon>
+                <customButtonIcon button="button_start_XBOX360">./assets/blank.svg</customButtonIcon>
+                <customButtonIcon button="button_back_switch">./assets/blank.svg</customButtonIcon>
+                <customButtonIcon button="button_start_switch">./assets/blank.svg</customButtonIcon>
+                <customButtonIcon button="button_back_PS4">./assets/blank.svg</customButtonIcon>
+                <customButtonIcon button="button_start_PS4">./assets/blank.svg</customButtonIcon>
+                <customButtonIcon button="button_back_PS5">./assets/blank.svg</customButtonIcon>
+                <customButtonIcon button="button_start_PS5">./assets/blank.svg</customButtonIcon>
+                <customButtonIcon button="button_back_PS123">./assets/blank.svg</customButtonIcon>
+                <customButtonIcon button="button_start_PS123">./assets/blank.svg</customButtonIcon>
+                <customButtonIcon button="button_back_SNES">./assets/blank.svg</customButtonIcon>
+                <customButtonIcon button="button_start_SNES">./assets/blank.svg</customButtonIcon>
+            </helpsystem>
+        </view>
+
+        <!-- HOME screen: a row of rounded tiles, the selected one outlined in cyan with its name above -->
+        <view name="system">
+            <!-- console-style ambient background (2026-10-08): a flowing 3D mesh of light. Needs the patched ES-DE in
+                 ~/Applications/ES-DE-switchhome (switchhome-ambient.patch): elements named "ambient" / "ambientStill"
+                 are shared by all tiles, drawn under everything and keep playing while you move between tiles.
+                 With a stock ES-DE they still work as a normal per-tile background (restarting on each move). -->
+            <image name="ambientStill">
+                <pos>0 0</pos>
+                <size>1 1</size>
+                <path>./switch/ambient_still.png</path>
+                <zIndex>1</zIndex>
+            </image>
+            <video name="ambient">
+                <pos>0 0</pos>
+                <size>1 1</size>
+                <path>./switch/ambient_wave.mp4</path>
+                <iterationCount>0</iterationCount>
+                <audio>false</audio>
+                <delay>0</delay>
+                <fadeInTime>0.6</fadeInTime>
+                <zIndex>2</zIndex>
+            </video>
+            <text name="selectedName">
+                <pos>0.5 0.235</pos>
+                <size>0.62 0.06</size>
+                <origin>0.5 0.5</origin>
+                <text>${system.fullName.noCollections}${system.fullName.customCollections}</text>
+                <fontPath>${fontLight}</fontPath>
+                <fontSize>0.045</fontSize>
+                <horizontalAlignment>center</horizontalAlignment>
+                <color>FFFFFF</color>
+                <zIndex>50</zIndex>
+            </text>
+            <carousel name="systemCarousel">
+                <pos>0.5 0.5</pos>
+                <size>1.04 0.50</size>
+                <origin>0.5 0.5</origin>
+                <type>horizontal</type>
+                <staticImage>./switch/tiles/${system.theme}.webp</staticImage>
+                <defaultImage>./switch/tiles/custom-collections.webp</defaultImage>
+                <maxItemCount>3.6</maxItemCount>
+                <itemSize>0.235 0.376</itemSize>
+                <itemScale>1.06</itemScale>
+                <selectedItemMargins>0.012 0.012</selectedItemMargins>
+                <imageFit>contain</imageFit>
+                <imageCornerRadius>0.011</imageCornerRadius>
+                <unfocusedItemOpacity>1</unfocusedItemOpacity>
+                <unfocusedItemDimming>0.94</unfocusedItemDimming>
+                <fastScrolling>true</fastScrolling>
+                <color>00000000</color>
+                <textColor>${ink}</textColor>
+                <fontPath>${fontBody}</fontPath>
+                <fontSize>0.03</fontSize>
+                <zIndex>20</zIndex>
+            </carousel>
+            <image name="selectionFrame">
+                <pos>0.5 0.5</pos>
+                <size>0.2695 0.4314</size>
+                <origin>0.5 0.5</origin>
+                <path>./switch/frame.png</path>
+                <zIndex>25</zIndex>
+            </image>
+            <text name="gameCount">
+                <pos>0.5 0.765</pos>
+                <size>0.30 0.05</size>
+                <origin>0.5 0.5</origin>
+                <systemdata>gamecount</systemdata>
+                <fontPath>${fontBody}</fontPath>
+                <fontSize>0.03</fontSize>
+                <horizontalAlignment>center</horizontalAlignment>
+                <color>${inkSoft}</color>
+                <backgroundColor>${cardSolid}</backgroundColor>
+                <backgroundCornerRadius>0.02</backgroundCornerRadius>
+                <zIndex>50</zIndex>
+            </text>
+            <image name="autoCollectionLabel">
+                <pos>0.5 0.235</pos>
+                <maxSize>0.36 0.06</maxSize>
+                <origin>0.5 0.5</origin>
+                <path>./switch/labels/${system.theme.autoCollections}.png</path>
+                <default>./switch/labels/blank.png</default>
+                <zIndex>50</zIndex>
+            </image>
+            <text name="sysHintL">
+                <pos>0.15 0.235</pos>
+                <size>0.08 0.045</size>
+                <origin>0.5 0.5</origin>
+                <text>L  ◀</text>
+                <fontPath>${fontLight}</fontPath>
+                <fontSize>0.03</fontSize>
+                <horizontalAlignment>center</horizontalAlignment>
+                <color>${inkSoft}</color>
+                <zIndex>50</zIndex>
+            </text>
+            <text name="sysHintR">
+                <pos>0.85 0.235</pos>
+                <size>0.08 0.045</size>
+                <origin>0.5 0.5</origin>
+                <text>▶  R</text>
+                <fontPath>${fontLight}</fontPath>
+                <fontSize>0.03</fontSize>
+                <horizontalAlignment>center</horizontalAlignment>
+                <color>${inkSoft}</color>
+                <zIndex>50</zIndex>
+            </text>
+            <image name="iconRow">
+                <pos>0.035 0.94</pos>
+                <size>0.191 0.0848</size>
+                <origin>0 0.5</origin>
+                <path>./switch/iconrow.png</path>
+                <zIndex>50</zIndex>
+            </image>
+        </view>
+
+        <!-- Game list: slim list, big gameplay video on a white card, box cover in the card's corner -->
+        <view name="gamelist">
+            <image name="canvas">
+                <pos>0 0</pos>
+                <size>1 1</size>
+                <path>${pixel}</path>
+                <color>${canvas}</color>
+                <zIndex>0</zIndex>
+            </image>
+            <!-- Calm, constant background (2026-10-08). Game lists: this still under the slow aurora
+                 video (its first frame), so entering a list does not flash. -->
+            <image name="backdropStill">
+                <pos>0 0</pos>
+                <size>1 1</size>
+                <path>./switch/bg_still.png</path>
+                <stationary>always</stationary>
+                <zIndex>1</zIndex>
+            </image>
+            <video name="backdrop">
+                <pos>0 0</pos>
+                <size>1 1</size>
+                <path>./switch/bg.mp4</path>
+                <iterationCount>0</iterationCount>
+                <audio>false</audio>
+                <fadeInTime>0.6</fadeInTime>
+                <stationary>always</stationary>
+                <zIndex>2</zIndex>
+            </video>
+            <image name="systemLogo">
+                <pos>0.04 0.06</pos>
+                <maxSize>0.20 0.065</maxSize>
+                <origin>0 0.5</origin>
+                <path>./system/logos/${system.theme}.svg</path>
+                <color>${ink}</color>
+                <zIndex>50</zIndex>
+            </image>
+            <image name="consolePill">
+                <pos>0.5 0.06</pos>
+                <size>0.36 0.10</size>
+                <origin>0.5 0.5</origin>
+                <path>${pixel}</path>
+                <color>${card}</color>
+                <cornerRadius>0.05</cornerRadius>
+                <zIndex>45</zIndex>
+            </image>
+            <image name="consoleArt">
+                <pos>0.5 0.06</pos>
+                <maxSize>0.17 0.094</maxSize>
+                <origin>0.5 0.5</origin>
+                <path>./switch/header/${system.theme}.webp</path>
+                <default>./switch/header/custom-collections.webp</default>
+                <zIndex>50</zIndex>
+            </image>
+            <text name="hintL">
+                <pos>0.375 0.06</pos>
+                <size>0.07 0.045</size>
+                <origin>0.5 0.5</origin>
+                <text>L  ◀</text>
+                <fontPath>${fontLight}</fontPath>
+                <fontSize>0.03</fontSize>
+                <horizontalAlignment>center</horizontalAlignment>
+                <color>${ink}</color>
+                <zIndex>50</zIndex>
+            </text>
+            <text name="hintR">
+                <pos>0.625 0.06</pos>
+                <size>0.07 0.045</size>
+                <origin>0.5 0.5</origin>
+                <text>▶  R</text>
+                <fontPath>${fontLight}</fontPath>
+                <fontSize>0.03</fontSize>
+                <horizontalAlignment>center</horizontalAlignment>
+                <color>${ink}</color>
+                <zIndex>50</zIndex>
+            </text>
+            <image name="ruleTop">
+                <pos>0.035 0.11</pos>
+                <size>0.93 0.0018</size>
+                <path>${pixel}</path>
+                <color>${rule}</color>
+                <zIndex>5</zIndex>
+            </image>
+            <textlist name="gamelistTextlist">
+                <pos>0.03 0.135</pos>
+                <size>0.335 0.73</size>
+                <origin>0 0</origin>
+                <!-- selected row (2026-10-08): neon-gradient outline + faint gradient fill, like the home selection -->
+                <selectorImagePath>./switch/list_selector.png</selectorImagePath>
+                <selectorColor>FFFFFFFF</selectorColor>
+                <primaryColor>${ink}</primaryColor>
+                <secondaryColor>${inkSoft}</secondaryColor>
+                <selectedColor>FFFFFF</selectedColor>
+                <selectedBackgroundColor>00000000</selectedBackgroundColor>
+                <selectedBackgroundMargins>0.006 0.006</selectedBackgroundMargins>
+                <selectedBackgroundCornerRadius>0.01</selectedBackgroundCornerRadius>
+                <fontPath>${fontBody}</fontPath>
+                <fontSize>0.03</fontSize>
+                <horizontalAlignment>left</horizontalAlignment>
+                <horizontalMargin>0.012</horizontalMargin>
+                <letterCase>none</letterCase>
+                <lineSpacing>1.6</lineSpacing>
+                <zIndex>30</zIndex>
+            </textlist>
+            <!-- glass panel like the home tiles: the moving background shows through (2026-10-09) -->
+            <image name="card">
+                <pos>0.385 0.135</pos>
+                <size>0.58 0.73</size>
+                <path>./switch/glass_card.png</path>
+                <zIndex>10</zIndex>
+            </image>
+            <text name="gameTitle">
+                <pos>0.405 0.175</pos>
+                <size>0.54 0.05</size>
+                <origin>0 0.5</origin>
+                <metadata>name</metadata>
+                <fontPath>${fontLight}</fontPath>
+                <fontSize>0.04</fontSize>
+                <color>${ink}</color>
+                <zIndex>40</zIndex>
+            </text>
+            <text name="gameGenre">
+                <pos>0.405 0.218</pos>
+                <size>0.375 0.035</size>
+                <origin>0 0.5</origin>
+                <metadata>genre</metadata>
+                <fontPath>${fontBody}</fontPath>
+                <fontSize>0.026</fontSize>
+                <color>${inkSoft}</color>
+                <zIndex>40</zIndex>
+            </text>
+            <!-- how many can play, at a glance (2026-10-07) -->
+            <image name="gamePlayersIcon">
+                <pos>0.79 0.218</pos>
+                <maxSize>0.03 0.026</maxSize>
+                <origin>0 0.5</origin>
+                <path>./switch/players.svg</path>
+                <color>${cyanDeep}</color>
+                <zIndex>40</zIndex>
+            </image>
+            <text name="gamePlayers">
+                <pos>0.823 0.218</pos>
+                <size>0.07 0.035</size>
+                <origin>0 0.5</origin>
+                <metadata>players</metadata>
+                <fontPath>${fontBody}</fontPath>
+                <fontSize>0.026</fontSize>
+                <color>${ink}</color>
+                <zIndex>40</zIndex>
+            </text>
+            <datetime name="gameYear">
+                <pos>0.945 0.218</pos>
+                <size>0.15 0.035</size>
+                <origin>1 0.5</origin>
+                <metadata>releasedate</metadata>
+                <format>%Y</format>
+                <defaultValue>:space:</defaultValue>
+                <fontPath>${fontBody}</fontPath>
+                <fontSize>0.026</fontSize>
+                <horizontalAlignment>right</horizontalAlignment>
+                <color>${inkSoft}</color>
+                <zIndex>40</zIndex>
+            </datetime>
+            <video name="gameVideo">
+                <pos>0.675 0.48</pos>
+                <origin>0.5 0.5</origin>
+                <maxSize>0.54 0.44</maxSize>
+                <imageType>screenshot, titlescreen, miximage, cover</imageType>
+                <!-- the preview waits until you rest on a game (PS5): fast scrolling shows only the screenshots, never
+                     the black start of the clips (2026-10-08) -->
+                <delay>1.1</delay>
+                <fadeInType>transparent</fadeInType>
+                <fadeInTime>0.35</fadeInTime>
+                <audio>true</audio>
+                <pillarboxes>false</pillarboxes>
+                <scrollFadeIn>false</scrollFadeIn>
+                <videoCornerRadius>0.008</videoCornerRadius>
+                <imageCornerRadius>0.008</imageCornerRadius>
+                <zIndex>30</zIndex>
+            </video>
+            <text name="gameDesc">
+                <pos>0.405 0.712</pos>
+                <size>0.42 0.083</size>
+                <metadata>description</metadata>
+                <container>true</container>
+                <containerType>vertical</containerType>
+                <containerScrollSpeed>0.6</containerScrollSpeed>
+                <containerStartDelay>5</containerStartDelay>
+                <containerResetDelay>5</containerResetDelay>
+                <fontPath>${fontBody}</fontPath>
+                <fontSize>0.021</fontSize>
+                <lineSpacing>1.3</lineSpacing>
+                <color>${inkSoft}</color>
+                <zIndex>40</zIndex>
+            </text>
+            <image name="gameCover">
+                <pos>0.955 0.85</pos>
+                <origin>1 1</origin>
+                <maxSize>0.12 0.25</maxSize>
+                <imageType>cover, 3dbox</imageType>
+                <scrollFadeIn>false</scrollFadeIn>
+                <cornerRadius>0.005</cornerRadius>
+                <zIndex>45</zIndex>
+            </image>
+            <badges name="badges">
+                <pos>0.405 0.815</pos>
+                <size>0.32 0.045</size>
+                <origin>0 0.5</origin>
+                <horizontalAlignment>left</horizontalAlignment>
+                <direction>row</direction>
+                <lines>1</lines>
+                <itemsPerLine>9</itemsPerLine>
+                <badgeIconColor>${inkSoft}</badgeIconColor>
+                <zIndex>40</zIndex>
+            </badges>
+            <image name="curateLegend">
+                <pos>0.405 0.848</pos>
+                <maxSize>0.30 0.032</maxSize>
+                <origin>0 0.5</origin>
+                <path>./switch/legend/${system.theme}.png</path>
+                <default>./switch/legend/legend.png</default>
+                <zIndex>40</zIndex>
+            </image>
+            <gamelistinfo name="gamelistInfo">
+                <pos>0.965 0.11</pos>
+                <size>0.25 0.03</size>
+                <origin>1 1</origin>
+                <fontPath>${fontBody}</fontPath>
+                <fontSize>0.022</fontSize>
+                <horizontalAlignment>right</horizontalAlignment>
+                <color>${inkSoft}</color>
+                <zIndex>40</zIndex>
+            </gamelistinfo>
+        </view>
+    </variant>
+    <!-- per-screen tweaks, in their own block so they're parsed AFTER the layout above (only Continue Playing has
+         one; missing files are skipped) -->
+    <variant name="all">
+        <include>./switch/navigationsounds.xml</include>
+        <include>./switch/screens/${system.theme}.xml</include>
+    </variant>
+    <!-- 16:9 (the TV, 2026-10-09): sizes are fractions of the screen, so the 16:10 values stretched the selection
+         frame wider than the square tiles. Same proportions as on the Deck: widths x (10/16) / (9/16). -->
+    <aspectRatio name="16:9">
+        <view name="system">
+            <carousel name="systemCarousel">
+                <itemSize>0.2115 0.376</itemSize>
+                <maxItemCount>4.0</maxItemCount>
+            </carousel>
+            <image name="selectionFrame">
+                <size>0.2427 0.4314</size>
+            </image>
+            <!-- round icons (2026-10-09): same element size, an 800x200 image with wider spacing so the discs stay
+                 round and their centres still match deck_icon_focus.py (x * W/1280) -->
+            <image name="iconRow">
+                <path>./switch/iconrow_169.png</path>
+            </image>
+        </view>
+    </aspectRatio>
+</theme>

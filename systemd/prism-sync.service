@@ -1,0 +1,6 @@
+[Unit]
+Description=Prism: add new Steam games and emulator ROMs (restarts ES-DE only when idle)
+[Service]
+Type=oneshot
+Nice=10
+ExecStart=/usr/bin/python3 @HOME@/prism/prism_sync.py

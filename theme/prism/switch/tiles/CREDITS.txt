@@ -1,0 +1,2 @@
+Party tile art (tiles/Party.webp, tiles/party.webp): rendered from Valve Corporation's Steam Controller CAD files
+(gitlab.steamos.cloud/SteamHardware/SteamController), CC BY-NC-SA 4.0. Not affiliated with or endorsed by Valve.

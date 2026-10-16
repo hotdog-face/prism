@@ -1,0 +1,6 @@
+[Unit]
+Description=Nightly save backup to the NAS (skips while the NAS RAID is busy)
+[Service]
+Type=oneshot
+Nice=10
+ExecStart=@HOME@/prism/save_backup.sh

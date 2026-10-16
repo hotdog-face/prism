@@ -1,0 +1,6 @@
+[Unit]
+Description=Movies/TV rows from Plex (stubs, artwork, staged gamelists; applied at the next ES-DE restart)
+[Service]
+Type=oneshot
+Nice=10
+ExecStart=/usr/bin/python3 @HOME@/prism/plex_sync.py

@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!-- the owner 2026-10-06: consoles newest to oldest (hub tiles first, generic arcade last). Key = 9999 - release year. -->
+<systemList>
+  <system><name>steam</name><systemsortname>0 Steam</systemsortname></system>
+  <system><name>foryou</name><systemsortname>0a For You</systemsortname></system>
+  <system><name>media</name><systemsortname>0b Media</systemsortname></system>
+  <system><name>movies</name><systemsortname>0b1 Movies</systemsortname></system>
+  <system><name>tv</name><systemsortname>0b2 TV Shows</systemsortname></system>
+  <system><name>music</name><systemsortname>0b3 Music</systemsortname></system>
+  <system><name>switch</name><systemsortname>1 7982 switch</systemsortname></system>
+  <system><name>ps4</name><systemsortname>1 7986 ps4</systemsortname></system>
+  <system><name>wiiu</name><systemsortname>1 7987 wiiu</systemsortname></system>
+  <system><name>psvita</name><systemsortname>1 7988 psvita</systemsortname></system>
+  <system><name>n3ds</name><systemsortname>1 7988 n3ds</systemsortname></system>
+  <system><name>ps3</name><systemsortname>1 7993 ps3</systemsortname></system>
+  <system><name>wii</name><systemsortname>1 7993 wii</systemsortname></system>
+  <system><name>xbox360</name><systemsortname>1 7994 xbox360</systemsortname></system>
+  <system><name>psp</name><systemsortname>1 7995 psp</systemsortname></system>
+  <system><name>nds</name><systemsortname>1 7995 nds</systemsortname></system>
+  <system><name>atomiswave</name><systemsortname>1 7996 atomiswave</systemsortname></system>
+  <system><name>gc</name><systemsortname>1 7998 gc</systemsortname></system>
+  <system><name>gamecube</name><systemsortname>1 7998 gamecube</systemsortname></system>
+  <system><name>xbox</name><systemsortname>1 7998 xbox</systemsortname></system>
+  <system><name>gba</name><systemsortname>1 7998 gba</systemsortname></system>
+  <system><name>ps2</name><systemsortname>1 7999 ps2</systemsortname></system>
+  <system><name>wonderswancolor</name><systemsortname>1 7999 wonderswancolor</systemsortname></system>
+  <system><name>ngpc</name><systemsortname>1 8000 ngpc</systemsortname></system>
+  <system><name>wonderswan</name><systemsortname>1 8000 wonderswan</systemsortname></system>
+  <system><name>dreamcast</name><systemsortname>1 8001 dreamcast</systemsortname></system>
+  <system><name>naomi</name><systemsortname>1 8001 naomi</systemsortname></system>
+  <system><name>gbc</name><systemsortname>1 8001 gbc</systemsortname></system>
+  <system><name>ngp</name><systemsortname>1 8001 ngp</systemsortname></system>
+  <system><name>n64</name><systemsortname>1 8003 n64</systemsortname></system>
+  <system><name>cps3</name><systemsortname>1 8003 cps3</systemsortname></system>
+  <system><name>model3</name><systemsortname>1 8003 model3</systemsortname></system>
+  <system><name>virtualboy</name><systemsortname>1 8004 virtualboy</systemsortname></system>
+  <system><name>satellaview</name><systemsortname>1 8004 satellaview</systemsortname></system>
+  <system><name>psx</name><systemsortname>1 8005 psx</systemsortname></system>
+  <system><name>saturn</name><systemsortname>1 8005 saturn</systemsortname></system>
+  <system><name>sega32x</name><systemsortname>1 8005 sega32x</systemsortname></system>
+  <system><name>neogeocd</name><systemsortname>1 8005 neogeocd</systemsortname></system>
+  <system><name>3do</name><systemsortname>1 8006 3do</systemsortname></system>
+  <system><name>atarijaguar</name><systemsortname>1 8006 atarijaguar</systemsortname></system>
+  <system><name>cps2</name><systemsortname>1 8006 cps2</systemsortname></system>
+  <system><name>model2</name><systemsortname>1 8006 model2</systemsortname></system>
+  <system><name>segacd</name><systemsortname>1 8008 segacd</systemsortname></system>
+  <system><name>snes</name><systemsortname>1 8009 snes</systemsortname></system>
+  <system><name>neogeo</name><systemsortname>1 8009 neogeo</systemsortname></system>
+  <system><name>gamegear</name><systemsortname>1 8009 gamegear</systemsortname></system>
+  <system><name>gb</name><systemsortname>1 8010 gb</systemsortname></system>
+  <system><name>atarilynx</name><systemsortname>1 8010 atarilynx</systemsortname></system>
+  <system><name>genesis</name><systemsortname>1 8011 genesis</systemsortname></system>
+  <system><name>megadrive</name><systemsortname>1 8011 megadrive</systemsortname></system>
+  <system><name>cps1</name><systemsortname>1 8011 cps1</systemsortname></system>
+  <system><name>pcenginecd</name><systemsortname>1 8011 pcenginecd</systemsortname></system>
+  <system><name>pcengine</name><systemsortname>1 8012 pcengine</systemsortname></system>
+  <system><name>tg16</name><systemsortname>1 8012 tg16</systemsortname></system>
+  <system><name>fds</name><systemsortname>1 8013 fds</systemsortname></system>
+  <system><name>atari7800</name><systemsortname>1 8013 atari7800</systemsortname></system>
+  <system><name>mastersystem</name><systemsortname>1 8014 mastersystem</systemsortname></system>
+  <system><name>nes</name><systemsortname>1 8016 nes</systemsortname></system>
+  <system><name>famicom</name><systemsortname>1 8016 famicom</systemsortname></system>
+  <system><name>msx</name><systemsortname>1 8016 msx</systemsortname></system>
+  <system><name>sg-1000</name><systemsortname>1 8016 sg-1000</systemsortname></system>
+  <system><name>colecovision</name><systemsortname>1 8017 colecovision</systemsortname></system>
+  <system><name>atari5200</name><systemsortname>1 8017 atari5200</systemsortname></system>
+  <system><name>intellivision</name><systemsortname>1 8020 intellivision</systemsortname></system>
+  <system><name>atari2600</name><systemsortname>1 8022 atari2600</systemsortname></system>
+  <system><name>arcade</name><systemsortname>9 Arcade</systemsortname></system>
+  <system><name>mame</name><systemsortname>9 MAME</systemsortname></system>
+  <system><name>scummvm</name><systemsortname>9 ScummVM</systemsortname></system>
+  <system><name>needsalook</name><systemsortname>9z Needs a look</systemsortname></system>
+</systemList>

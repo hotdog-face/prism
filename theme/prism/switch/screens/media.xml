@@ -1,0 +1,55 @@
+<!-- media (Request Movies): no list (2026-10-08). switchhome media-router opens Request Movies as soon as this view
+     appears and steps back to the console row behind it, so the view is only a brief splash. -->
+<theme>
+    <include>./_count_media.xml</include>
+    <view name="gamelist">
+        <textlist name="gamelistTextlist">
+            <pos>2 2</pos>
+            <size>0.1 0.1</size>
+        </textlist>
+        <image name="card"><visible>false</visible></image>
+        <text name="gameTitle"><visible>false</visible></text>
+        <text name="gameGenre"><visible>false</visible></text>
+        <datetime name="gameYear"><visible>false</visible></datetime>
+        <text name="gamePlayers"><visible>false</visible></text>
+        <image name="gamePlayersIcon"><visible>false</visible></image>
+        <video name="gameVideo"><visible>false</visible></video>
+        <text name="gameDesc"><visible>false</visible></text>
+        <image name="gameCover"><visible>false</visible></image>
+        <badges name="badges"><visible>false</visible></badges>
+        <image name="curateLegend"><visible>false</visible></image>
+        <gamelistinfo name="gamelistInfo"><visible>false</visible></gamelistinfo>
+        <!-- landing page (2026-10-09): picked from the home row it opens at once (media_router); reached by L/R
+             tabbing it stays here so tabbing keeps flowing, and A opens it -->
+        <image name="landingCard">
+            <pos>0.5 0.4</pos>
+            <maxSize>0.3 0.46</maxSize>
+            <origin>0.5 0.5</origin>
+            <path>./../tiles/media.webp</path>
+            <cornerRadius>0.016</cornerRadius>
+            <zIndex>40</zIndex>
+        </image>
+        <text name="mediaOpening">
+            <pos>0.5 0.705</pos>
+            <size>0.6 0.07</size>
+            <origin>0.5 0.5</origin>
+            <text>Request Movies</text>
+            <fontPath>./../NotoSans-Medium.ttf</fontPath>
+            <fontSize>0.05</fontSize>
+            <horizontalAlignment>center</horizontalAlignment>
+            <color>FFFFFF</color>
+            <zIndex>40</zIndex>
+        </text>
+        <text name="landingHint">
+            <pos>0.5 0.775</pos>
+            <size>0.6 0.05</size>
+            <origin>0.5 0.5</origin>
+            <text>Press A to open  ·  L / R to keep browsing</text>
+            <fontPath>./../NotoSans-Regular.ttf</fontPath>
+            <fontSize>0.028</fontSize>
+            <horizontalAlignment>center</horizontalAlignment>
+            <color>A9A9AE</color>
+            <zIndex>40</zIndex>
+        </text>
+    </view>
+</theme>

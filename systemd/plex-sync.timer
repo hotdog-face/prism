@@ -1,0 +1,7 @@
+[Unit]
+Description=Nightly Plex sync for Prism Movies/TV
+[Timer]
+OnCalendar=*-*-* 22:00
+Persistent=true
+[Install]
+WantedBy=timers.target

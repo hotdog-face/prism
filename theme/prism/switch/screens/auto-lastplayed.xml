@@ -1,0 +1,45 @@
+<!-- Continue Playing (auto-lastplayed): your last 8 games, big - one press away (the owner 2026-10-06).
+     Card shows when you last played and for how long (console-style), instead of genre / year.
+     Included only for this collection via ./switch/screens/${system.theme}.xml in theme.xml. -->
+<theme>
+    <view name="gamelist">
+        <textlist name="gamelistTextlist">
+            <fontSize>0.046</fontSize>
+            <lineSpacing>1.95</lineSpacing>
+            <selectedBackgroundMargins>0.008 0.01</selectedBackgroundMargins>
+            <selectedBackgroundCornerRadius>0.014</selectedBackgroundCornerRadius>
+        </textlist>
+        <text name="gameTitle">
+            <fontSize>0.046</fontSize>
+        </text>
+        <text name="gameGenre">
+            <visible>false</visible>
+        </text>
+        <datetime name="gameYear">
+            <visible>false</visible>
+        </datetime>
+        <datetime name="gameLastPlayed">
+            <pos>0.405 0.222</pos>
+            <size>0.36 0.035</size>
+            <origin>0 0.5</origin>
+            <metadata>lastplayed</metadata>
+            <displayRelative>true</displayRelative>
+            <fontPath>./../NotoSans-Regular.ttf</fontPath>
+            <fontSize>0.028</fontSize>
+            <color>${cyanDeep}</color>
+            <zIndex>40</zIndex>
+        </datetime>
+        <text name="gamePlaytime">
+            <pos>0.945 0.222</pos>
+            <size>0.2 0.035</size>
+            <origin>1 0.5</origin>
+            <metadata>playtime</metadata>
+            <defaultValue>:space:</defaultValue>
+            <fontPath>./../NotoSans-Regular.ttf</fontPath>
+            <fontSize>0.028</fontSize>
+            <horizontalAlignment>right</horizontalAlignment>
+            <color>${inkSoft}</color>
+            <zIndex>40</zIndex>
+        </text>
+    </view>
+</theme>

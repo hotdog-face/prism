@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<systemList>
+  <system>
+    <name>atarijaguar</name>
+    <fullname>Atari Jaguar</fullname>
+    <path>%ROMPATH%/atarijaguar</path>
+    <extension>.abs .ABS .bin .BIN .cdi .CDI .cof .COF .cue .CUE .j64 .J64 .jag .JAG .prg .PRG .rom .ROM .7z .7Z .zip .ZIP</extension>
+    <command label="BigPEmu (Proton)">/bin/bash @EMULATION@/tools/launchers/bigpemu.sh %ROM%</command>
+    <command label="Virtual Jaguar">%EMULATOR_RETROARCH% -L %CORE_RETROARCH%/virtualjaguar_libretro.so %ROM%</command>
+    <command label="MAME (Standalone)">%STARTDIR%=~/.mame %EMULATOR_MAME% -rompath %GAMEDIR%\;%ROMPATH%/atarijaguar jaguar -cart %ROM%</command>
+    <platform>atarijaguar</platform>
+    <theme>atarijaguar</theme>
+  </system>
+  <system>
+    <name>atarijaguarcd</name>
+    <fullname>Atari Jaguar CD</fullname>
+    <path>%ROMPATH%/atarijaguarcd</path>
+    <extension>.abs .ABS .bin .BIN .cdi .CDI .cof .COF .cue .CUE .j64 .J64 .jag .JAG .prg .PRG .rom .ROM .7z .7Z .zip .ZIP</extension>
+    <command label="BigPEmu (Proton)">/bin/bash @EMULATION@/tools/launchers/bigpemu.sh %ROM%</command>
+    <platform>atarijaguarcd</platform>
+    <theme>atarijaguarcd</theme>
+  </system>
+  <system>
+    <name>model2</name>
+    <fullname>Sega Model 2</fullname>
+    <path>%ROMPATH%/model2/roms</path>
+    <extension>.zip .ZIP</extension>
+    <command label="Model 2 Emulator (Proton)">/bin/bash @EMULATION@/tools/launchers/model-2-emulator.sh %BASENAME%</command>
+    <platform>arcade</platform>
+    <theme>model2</theme>
+  </system>
+  <system>
+    <name>switch</name>
+    <fullname>Nintendo Switch</fullname>
+    <path>%ROMPATH%/switch</path>
+    <extension>.nca .NCA .nro .NRO .nso .NSO .nsp .NSP .xci .XCI</extension>
+    <command label="Ryujinx (Standalone)">%EMULATOR_RYUJINX% %ROM%</command>
+    <command label="Yuzu (Standalone)">%INJECT%=%BASENAME%.esprefix %EMULATOR_YUZU% -f -g %ROM%</command>
+    <command label="Eden (Standalone)">%INJECT%=%BASENAME%.esprefix %EMULATOR_EDEN% -f -g %ROM%</command>
+    <platform>switch</platform>
+    <theme>switch</theme>
+    <command label="Citron (Standalone)">%INJECT%=%BASENAME%.esprefix %EMULATOR_CITRON% -f -g %ROM%</command>
+  </system>
+  <system>
+    <name>wiiu</name>
+    <fullname>Nintendo Wii U</fullname>
+    <path>%ROMPATH%/wiiu/roms</path>
+    <extension>.elf .ELF .rpx .RPX .tmd .TMD .wua .WUA .wud .WUD .wuhb .WUHB .wux .WUX</extension>
+    <command label="Cemu (Native)">/bin/bash @EMULATION@/tools/launchers/cemu.sh -f -g %ROM%</command>
+    <command label="Cemu (Proton)">/bin/bash @EMULATION@/tools/launchers/cemu.sh -w -f -g z:%ROM%</command>
+    <platform>wiiu</platform>
+    <theme>wiiu</theme>
+  </system>
+<system>
+    <name>ps4</name>
+    <fullname>Sony PlayStation 4</fullname>
+    <path>%ROMPATH%/ps4/shortcuts</path>
+    <extension>.desktop</extension>
+    <command label="ShadPS4 Shortcuts (Standalone)">%EMULATOR_SHADPS4% %ROM%</command>
+    <platform>ps4</platform>
+    <theme>ps4</theme>
+  </system>
+  <!-- <system>
+		<name>ps4-pkg</name>
+		<fullname>Sony PlayStation 4</fullname>
+		<path>%ROMPATH%\ps4</path>
+		<extension>.desktop</extension>
+		<command label="ShadPS4 PKG (Standalone)">%EMULATOR_SHADPS4% %ROM%</command>
+		<platform>ps4</platform>
+		<theme>ps4</theme>
+	</system> -->
+  <system>
+    <name>n3ds</name>
+    <fullname>Nintendo 3DS</fullname>
+    <path>%ROMPATH%/n3ds</path>
+    <extension>.3ds .3DS .3dsx .3DSX .app .APP .axf .AXF .cci .CCI .cxi .CXI .elf .ELF .7z .7Z .zip .ZIP</extension>
+    <command label="Citra">%EMULATOR_RETROARCH% -L %CORE_RETROARCH%\citra_libretro.dll %ROM%</command>
+    <command label="Citra 2018">%EMULATOR_RETROARCH% -L %CORE_RETROARCH%\citra2018_libretro.dll %ROM%</command>
+    <command label="Azahar (Standalone)">%EMULATOR_AZAHAR% %ROM%</command>
+    <platform>n3ds</platform>
+    <theme>n3ds</theme>
+  </system>
+  <system>
+    <name>n3ds</name>
+    <fullname>Nintendo 3DS</fullname>
+    <path>%ROMPATH%/n3ds</path>
+    <extension>.3ds .3DS .3dsx .3DSX .app .APP .axf .AXF .cci .CCI .cxi .CXI .elf .ELF .7z .7Z .zip .ZIP</extension>
+    <command label="Azahar (Standalone)">/usr/bin/bash @EMULATION@/tools/launchers/azahar.sh %ROM%</command>
+    <platform>n3ds</platform>
+    <theme>n3ds</theme>
+  </system>
+  <!-- deck system menu -->
+  <!-- Steam games (roms/steam, kept up to date by @PRISM_DIR@/prism_sync.py), first in the console row -->
+  <system>
+    <name>steam</name>
+    <fullname>Steam</fullname>
+    <systemsortname>0 Steam</systemsortname>
+    <path>%ROMPATH%/steam</path>
+    <extension>.desktop .sh</extension>
+    <command label="Steam (Standalone)">%RUNINBACKGROUND% %ENABLESHORTCUTS% %EMULATOR_OS-SHELL% %ROM%</command>
+    <platform>steam</platform>
+    <theme>steam</theme>
+  </system>
+  <system>
+    <name>media</name>
+    <fullname>Request Movies</fullname>
+    <systemsortname>0b Media</systemsortname>
+    <path>%ROMPATH%/media</path>
+    <extension>.sh</extension>
+    <command label="Open">%RUNINBACKGROUND% %ENABLESHORTCUTS% %EMULATOR_OS-SHELL% %ROM%</command>
+    <platform>ignore</platform>
+    <theme>media</theme>
+  </system>
+  <!-- Plex in Prism (2026-10-08): stubs made by plex_sync.py, played by plex_play.py (mpv) -->
+  <system>
+    <name>movies</name>
+    <fullname>Movies</fullname>
+    <systemsortname>0b1 Movies</systemsortname>
+    <path>%ROMPATH%/movies</path>
+    <extension>.plex</extension>
+    <command label="Play">/usr/bin/python3 @PRISM_DIR@/plex_play.py %ROM%</command>
+    <platform>ignore</platform>
+    <theme>movies</theme>
+  </system>
+  <system>
+    <name>tv</name>
+    <fullname>TV Shows</fullname>
+    <systemsortname>0b2 TV Shows</systemsortname>
+    <path>%ROMPATH%/tv</path>
+    <extension>.plex</extension>
+    <command label="Play">/usr/bin/python3 @PRISM_DIR@/plex_play.py %ROM%</command>
+    <platform>ignore</platform>
+    <theme>tv</theme>
+  </system>
+  <system>
+    <name>music</name>
+    <fullname>Music</fullname>
+    <systemsortname>0b3 Music</systemsortname>
+    <path>%ROMPATH%/music</path>
+    <extension>.music</extension>
+    <command label="Open">@PRISM_DIR@/deck_music_launch.sh %ROM%</command>
+    <platform>ignore</platform>
+    <theme>music</theme>
+  </system>
+  <system>
+    <name>foryou</name>
+    <fullname>For You</fullname>
+    <systemsortname>0a For You</systemsortname>
+    <path>%ROMPATH%/foryou</path>
+    <extension>.sh</extension>
+    <command label="Open">%RUNINBACKGROUND% %ENABLESHORTCUTS% %EMULATOR_OS-SHELL% %ROM%</command>
+    <platform>ignore</platform>
+    <theme>foryou</theme>
+  </system>
+  <!-- /deck system menu -->
+  <!-- Needs a look (prism_shelf.py): games that didn't start in the nightly test -->
+  <system>
+    <name>needsalook</name>
+    <fullname>Needs a look</fullname>
+    <path>%ROMPATH%/needsalook</path>
+    <extension>.0 .1DD .1dd .2D .2HD .2MG .2d .2hd .2mg .32X .32x .360 .3DS .3DSEN .3DSX .3ds .3dsen .3dsx .68K .68k .7Z .7z .88D .88d .98D .98d .A0 .A26 .A52 .A78 .ABS .ADF .ADL .ADM .ADS .ADZ .AGB .APD .APP .ARDUBOY .ATR .ATX .AXF .AppImage .B0 .BAT .BBC .BIGPIMG .BIN .BML .BMS .BS .BSX .CAR .CAS .CBN .CCC .CCD .CCI .CDI .CDM .CDR .CDT .CGB .CHAI .CHAILOVE .CHD .CHF .CISO .CMD .CMT .COF .COL .COM .CONF .CPR .CQI .CQM .CRT .CSO .CSW .CUE .CV .CXI .D2M .D4M .D64 .D6Z .D71 .D77 .D7Z .D80 .D81 .D82 .D88 .D8Z .D98 .DAT .DDP .DFF .DFI .DI1 .DI2 .DIM .DMG .DMK .DMS .DO .DOL .DOSZ .DSD .DSI .DSK .DUMP .DUP .DX1 .DX2 .ECM .ELF .EXE .FD .FD1 .FD2 .FDD .FDI .FDS .FIG .FPT .G41 .G4Z .G64 .G6Z .GAM .GAME .GB .GBA .GBC .GBX .GCM .GCZ .GD3 .GD7 .GDI .GEN .GG .GZ .HDD .HDF .HDI .HDM .HDN .HDZ .HEX .HFE .IDS .IMA .IMD .IMG .INT .IPF .IPK3 .ISO .ISZ .IWAD .J64 .JAG .JAR .JFD .JSON .K7 .KCR .LHA .LNX .LST .LUA .LUTRO .LYX .M3U .M5 .M7 .MD .MDF .MDS .MDX .MFI .MFM .MGD .MGT .MGW .MIN .MINIPSF .MMI .MSA .MX1 .MX2 .MYV .N64 .NBZ .NCA .NDD .NDS .NEO .NES .NEX .NGC .NGP .NGPC .NHD .NIB .NPC .NRG .NRO .NSO .NSP .NX .O .OGV .ORT .P .P00 .P8 .PAK .PBP .PC2 .PCE .PHD .PK3 .PK4 .PNG .PO .PQA .PRC .PRG .PRX .PS3 .PS3DIR .PS4 .PSEXE .PSF .PSX .PWAD .RI .ROM .RP9 .RPK .RPX .RUF .RVZ .RZX .SAD .SAP .SBT .SC .SCL .SCUMMVM .SFC .SG .SGB .SGD .SGX .SH .SIS .SISX .SMC .SMD .SMS .SNA .SSD .ST .STX .SV .SVM .SWC .SWF .SZX .T64 .T77 .T88 .TAP .TAR .TD0 .TFD .TGC .THD .TIC .TMD .TOC .TRD .TVC .TZX .U1 .U88 .UAE .UDI .UEF .UFI .UNF .UNIF .UZE .V32 .V64 .VB .VBOY .VC .VEC .VFL .VOC .VPT .VPX .VSF .WAD .WASM .WAV .WBFS .WIA .WS .WSC .WUA .WUD .WUHB .WUX .X64 .X6Z .XBE .XCI .XDF .XEX .XFD .XISO .XSA .Z .Z1 .Z2 .Z3 .Z3DSX .Z4 .Z5 .Z6 .Z64 .Z7 .Z8 .Z80 .ZAR .ZBLORB .ZCCI .ZCXI .ZIP .ZLB .ZNX .ZSO .a0 .a26 .a52 .a78 .abs .acgame .adf .adl .adm .ads .adz .agb .apd .app .arcadedef .arduboy .atr .atx .axf .b0 .bat .bbc .bigpimg .bin .bml .bms .bs .bsx .car .cas .cbn .ccc .ccd .cci .cdi .cdm .cdr .cdt .cgb .chai .chailove .chd .chf .ciso .cmd .cmt .cof .col .com .conf .cpr .cqi .cqm .crt .cso .csw .cue .cv .cxi .d2m .d4m .d64 .d6z .d71 .d77 .d7z .d80 .d81 .d82 .d88 .d8z .d98 .daphne .dat .ddp .desktop .dff .dfi .di1 .di2 .dim .dirksimple .dmg .dmk .dms .do .dol .dosz .dsd .dsi .dsk .dump .dup .dx1 .dx2 .easyrpg .ecm .elf .exe .fd .fd1 .fd2 .fdd .fdi .fds .fig .fpt .g41 .g4z .g64 .g6z .gam .game .gb .gba .gbc .gbx .gcm .gcz .gd3 .gd7 .gdi .gen .gg .gz .hdd .hdf .hdi .hdm .hdn .hdz .hex .hfe .ids .ima .imd .img .int .ipf .ipk3 .iso .isz .iwad .j64 .jag .jar .jfd .json .k7 .kcr .lha .lindbergh .lnx .lst .lua .lutro .lyx .m3u .m5 .m7 .md .mdf .mds .mdx .mfi .mfm .mgd .mgt .mgw .min .minipsf .mmi .msa .mugen .music .mx1 .mx2 .myv .n64 .nbz .nca .ndd .nds .neo .nes .nex .ngage .ngc .ngp .ngpc .ngr .nhd .nib .npc .nrg .nro .nso .nsp .nx .o .ogv .ort .p .p00 .p8 .pak .pbp .pc2 .pce .phd .pk3 .pk4 .plex .png .po .pqa .prc .prg .prx .ps3 .ps3dir .ps4 .psexe .psf .psvita .psx .pwad .ri .rom .rp9 .rpk .rpx .ruf .rvz .rzx .sad .sap .sbt .sc .scl .scummvm .sfc .sg .sgb .sgd .sgx .sh .singe .sis .sisx .smc .smd .sms .sna .solarus .ssd .st .stx .sv .svm .swc .swf .symbian .szx .t64 .t77 .t88 .tap .td0 .tfd .tgc .thd .tic .tmd .toc .trd .tvc .tzx .u1 .u88 .uae .udi .uef .ufi .unf .unif .uze .v32 .v64 .vb .vboy .vc .vec .vfl .voc .vpt .vpx .vsf .wad .wasm .wav .wbfs .wia .ws .wsc .wua .wud .wuhb .wux .x64 .x6z .xbe .xci .xdf .xex .xfd .xiso .xsa .z .z1 .z2 .z3 .z3dsx .z4 .z5 .z6 .z64 .z7 .z8 .z80 .zar .zblorb .zcci .zcxi .zip .zlb .znx .zso CUE</extension>
+    <command label="Put back">/usr/bin/python3 @PRISM_DIR@/prism_shelf.py restore %ROM%</command>
+    <platform>ignore</platform>
+    <theme>needsalook</theme>
+  </system>
+  <system>
+    <name>xbox360</name>
+    <fullname>Microsoft Xbox 360</fullname>
+    <path>%ROMPATH%/xbox360/roms</path>
+    <extension>.iso .ISO . .xex .XEX .zar .ZAR</extension>
+    <command label="Xenia (Proton)">/bin/bash @PRISM_DIR@/emu/prism_xenia.sh z:%ROM% %INJECT%=%BASENAME%.esprefix</command>
+    <platform>xbox360</platform>
+    <theme>xbox360</theme>
+  </system>
+  </systemList>

@@ -1,0 +1,445 @@
+diff --git a/es-app/src/CollectionSystemsManager.cpp b/es-app/src/CollectionSystemsManager.cpp
+index 159efba..ba44c5e 100644
+--- a/es-app/src/CollectionSystemsManager.cpp
++++ b/es-app/src/CollectionSystemsManager.cpp
+@@ -287,6 +287,31 @@ void CollectionSystemsManager::updateSystemsList()
+     // Add auto enabled collections.
+     addEnabledCollectionsToDisplayedSystems(&mAutoCollectionSystemsData);
+ 
++    // Prism (2026-10-09): collections named in <ES-DE home>/settings/front_collections.txt (one per line) are moved
++    // to the front of the system carousel, in that order, instead of following all the regular systems.
++    {
++        std::ifstream front {Utils::FileSystem::getAppDataDirectory() + "/settings/front_collections.txt"};
++        std::vector<std::string> names;
++        for (std::string line; std::getline(front, line);) {
++            line = Utils::String::trim(line);
++            if (!line.empty())
++                names.emplace_back(line);
++        }
++        for (auto nameIt = names.crbegin(); nameIt != names.crend(); ++nameIt) {
++            auto sysIt = std::find_if(SystemData::sSystemVector.begin(), SystemData::sSystemVector.end(),
++                                      [&nameIt](SystemData* sys) {
++                                          return sys->isCollection() &&
++                                                 Utils::String::toLower(sys->getName()) ==
++                                                     Utils::String::toLower(*nameIt);
++                                      });
++            if (sysIt != SystemData::sSystemVector.end()) {
++                SystemData* sys {*sysIt};
++                SystemData::sSystemVector.erase(sysIt);
++                SystemData::sSystemVector.insert(SystemData::sSystemVector.begin(), sys);
++            }
++        }
++    }
++
+     if (mApplicationStartup)
+         return;
+ 
+diff --git a/es-app/src/GamelistFileParser.cpp b/es-app/src/GamelistFileParser.cpp
+index fe8f8a1..9fd1af7 100644
+--- a/es-app/src/GamelistFileParser.cpp
++++ b/es-app/src/GamelistFileParser.cpp
+@@ -8,6 +8,12 @@
+ 
+ #include "GamelistFileParser.h"
+ 
++#include <cstdio>
++#include <sstream>
++#if !defined(_WIN64)
++#include <unistd.h>
++#endif
++
+ #include "FileData.h"
+ #include "Log.h"
+ #include "Settings.h"
+@@ -491,6 +497,7 @@ namespace GamelistFileParser
+         FileData* rootFolder {system->getRootFolder()};
+         if (rootFolder != nullptr) {
+             int numUpdated {0};
++            std::vector<FileData*> changedFiles; // flagged again if the write fails (Prism)
+ 
+             // Get only files, no folders.
+             std::vector<FileData*> files {rootFolder->getFilesRecursive(GAME | FOLDER)};
+@@ -532,6 +539,7 @@ namespace GamelistFileParser
+                 if (!(*fit)->getDeletionFlag()) {
+                     addFileDataNode(root, *fit, tag, system);
+                     (*fit)->metadata.resetChangedFlag();
++                    changedFiles.push_back(*fit);
+                     ++numUpdated;
+                 }
+             }
+@@ -582,7 +590,30 @@ namespace GamelistFileParser
+ #if defined(_WIN64)
+                 if (!doc.save_file(Utils::String::stringToWideString(xmlWritePath).c_str())) {
+ #else
+-                if (!doc.save_file(xmlWritePath.c_str())) {
++                // Prism (2026-10-13): write a temporary file and rename it over the gamelist, so a failed
++                // write (disk full: a crashing emulator's core dump filled /home on 2026-10-10) can't leave
++                // a truncated gamelist.xml, which the next save treats as empty and rewrites with only the
++                // games changed since then (95 Switch entries lost). On failure the entries stay flagged
++                // as changed, so the next save writes them.
++                // The XML is rendered in memory and every step of the write is checked (pugixml's
++                // save_file() doesn't check the final flush when the file is closed).
++                const std::string& xmlTempPath {xmlWritePath + ".tmp"};
++                std::ostringstream xmlStream;
++                doc.save(xmlStream, "\t");
++                const std::string& xmlData {xmlStream.str()};
++                bool saved {false};
++                if (FILE* file {fopen(xmlTempPath.c_str(), "wb")}) {
++                    saved = fwrite(xmlData.data(), 1, xmlData.size(), file) == xmlData.size();
++                    saved = fflush(file) == 0 && saved;
++                    saved = fsync(fileno(file)) == 0 && saved;
++                    saved = fclose(file) == 0 && saved;
++                }
++                if (saved && std::rename(xmlTempPath.c_str(), xmlWritePath.c_str()) != 0)
++                    saved = false;
++                if (!saved) {
++                    Utils::FileSystem::removeFile(xmlTempPath);
++                    for (FileData* file : changedFiles)
++                        file->metadata.setChangedFlag();
+ #endif
+                     LOG(LogError) << "Error saving gamelist.xml to \"" << xmlWritePath
+                                   << "\" (for system " << system->getName() << ")";
+diff --git a/es-app/src/MetaData.h b/es-app/src/MetaData.h
+index a1f2c18..bd36cdb 100644
+--- a/es-app/src/MetaData.h
++++ b/es-app/src/MetaData.h
+@@ -83,6 +83,7 @@ public:
+ 
+     bool wasChanged() const;
+     void resetChangedFlag();
++    void setChangedFlag() { mWasChanged = true; } // Prism: a gamelist write failed
+ 
+     MetaDataListType getType() const { return mType; }
+     const std::vector<MetaDataDecl>& getMDD() const { return getMDDByType(getType()); }
+diff --git a/es-app/src/views/GamelistBase.cpp b/es-app/src/views/GamelistBase.cpp
+index ab9c3b6..345b7a3 100644
+--- a/es-app/src/views/GamelistBase.cpp
++++ b/es-app/src/views/GamelistBase.cpp
+@@ -13,6 +13,8 @@
+ 
+ #include "views/GamelistBase.h"
+ 
++#include "FavoriteBurst.h"
++
+ #include "CollectionSystemsManager.h"
+ #include "FileFilterIndex.h"
+ #include "UIModeController.h"
+@@ -438,7 +440,8 @@ bool GamelistBase::input(InputConfig* config, Input input)
+                                               "AS GAMES TO CUSTOM COLLECTIONS"),
+                                             4000);
+                 }
+-                else if (CollectionSystemsManager::getInstance()->toggleGameInCollection(
++                else if (const bool addingFavorite {!isEditing && !entryToUpdate->getFavorite()};
++                         CollectionSystemsManager::getInstance()->toggleGameInCollection(
+                              entryToUpdate)) {
+                     // Needed to avoid some minor transition animation glitches.
+                     auto grid =
+@@ -470,6 +473,14 @@ bool GamelistBase::input(InputConfig* config, Input input)
+                         view->setCursor(view->getLastEntry());
+                     }
+ 
++                    // Prism patch: a newly favorited game keeps the cursor (at its new place
++                    // in the list) and gets a star burst on its title.
++                    if (addingFavorite && entryToUpdate->getFavorite()) {
++                        if (favoritesSorting && view->getPrimary()->size() > 0)
++                            view->setCursor(entryToUpdate);
++                        FavoriteBurst::trigger(entryToUpdate->getFullPath());
++                    }
++
+                     if (grid != nullptr)
+                         grid->setSuppressTransitions(false);
+ 
+diff --git a/es-app/src/views/SystemView.cpp b/es-app/src/views/SystemView.cpp
+index edf65e8..4b38123 100644
+--- a/es-app/src/views/SystemView.cpp
++++ b/es-app/src/views/SystemView.cpp
+@@ -61,6 +61,9 @@ void SystemView::onHide()
+     for (auto& video : mSystemElements[mPrimary->getCursor()].videoComponents)
+         video->stopVideoPlayer(false);
+ 
++    if (mAmbientVideo)
++        mAmbientVideo->stopVideoPlayer(false);
++
+     mPreviousSelectEvent = -1;
+ }
+ 
+@@ -169,6 +172,10 @@ void SystemView::update(int deltaTime)
+             video->update(deltaTime);
+     }
+ 
++    // Prism patch: the ambient video keeps playing while scrolling between systems.
++    if (mAmbientVideo)
++        mAmbientVideo->update(deltaTime);
++
+     for (auto& anim : mSystemElements[mPrimary->getCursor()].lottieAnimComponents)
+         anim->update(deltaTime);
+ 
+@@ -191,6 +198,15 @@ void SystemView::render(const glm::mat4& parentTrans)
+     if (mNavigated && mMaxFade)
+         transitionFade = true;
+ 
++    // Prism patch: shared ambient background below all per-system elements, not offset per system.
++    if (mAmbientStill || mAmbientVideo) {
++        const glm::mat4 ambientTrans {getTransform() * parentTrans};
++        if (mAmbientStill)
++            mAmbientStill->render(ambientTrans);
++        if (mAmbientVideo)
++            static_cast<GuiComponent*>(mAmbientVideo.get())->render(ambientTrans);
++    }
++
+     if (!transitionFade)
+         renderElements(parentTrans, false);
+     glm::mat4 trans {getTransform() * parentTrans};
+@@ -533,6 +549,9 @@ void SystemView::populate()
+ 
+     LOG(LogDebug) << "SystemView::populate(): Populating primary element...";
+ 
++    mAmbientStill.reset();
++    mAmbientVideo.reset();
++
+     auto themes = ThemeData::getThemes();
+     std::map<std::string, ThemeData::Theme, ThemeData::StringComparator>::const_iterator
+         selectedTheme {themes.find(Settings::getInstance()->getString("Theme"))};
+@@ -551,6 +570,26 @@ void SystemView::populate()
+             elements.name = it->getName();
+             elements.fullName = it->getFullName();
+             for (auto& element : theme->getViewElements("system").elements) {
++                // Prism patch: "ambient" / "ambientStill" are created once (from the first system)
++                // and shared by all systems instead of being instantiated per system.
++                if (element.first == "video_ambient" || element.first == "image_ambientStill") {
++                    if (it == SystemData::sSystemVector.front()) {
++                        if (element.second.type == "video") {
++                            mAmbientVideo = std::make_unique<VideoFFmpegComponent>();
++                            mAmbientVideo->applyTheme(theme, "system", element.first,
++                                                      ThemeFlags::ALL);
++                            // Loads the theme path into the player (per-system videos get this on
++                            // every cursor change; the shared one only here).
++                            mAmbientVideo->setStaticVideo();
++                        }
++                        else {
++                            mAmbientStill = std::make_unique<ImageComponent>(true);
++                            mAmbientStill->applyTheme(theme, "system", element.first,
++                                                      ThemeFlags::ALL);
++                        }
++                    }
++                    continue;
++                }
+                 if (element.second.type == "gameselector") {
+                     elements.gameSelectors.emplace_back(
+                         std::make_unique<GameSelectorComponent>(it));
+diff --git a/es-app/src/views/SystemView.h b/es-app/src/views/SystemView.h
+index 153171b..2f0de27 100644
+--- a/es-app/src/views/SystemView.h
++++ b/es-app/src/views/SystemView.h
+@@ -16,6 +16,7 @@
+ #include "components/DateTimeComponent.h"
+ #include "components/GIFAnimComponent.h"
+ #include "components/GameSelectorComponent.h"
++#include "components/ImageComponent.h"
+ #include "components/LottieAnimComponent.h"
+ #include "components/RatingComponent.h"
+ #include "components/ScrollableContainer.h"
+@@ -79,22 +80,35 @@ public:
+     {
+         for (auto& video : mSystemElements[mPrimary->getCursor()].videoComponents)
+             video->startVideoPlayer();
++        // Prism patch: the shared ambient video is not restarted when the system changes.
++        if (mAmbientVideo) {
++            if (!mAmbientVideo->isVideoPlaying())
++                mAmbientVideo->startVideoPlayer();
++            else if (mAmbientVideo->isVideoPaused())
++                mAmbientVideo->resumeVideoPlayer();
++        }
+     }
+     void stopViewVideos() override
+     {
+         for (auto& video : mSystemElements[mPrimary->getCursor()].videoComponents)
+             video->stopVideoPlayer();
++        if (mAmbientVideo)
++            mAmbientVideo->stopVideoPlayer();
+     }
+     void pauseViewVideos() override
+     {
+         for (auto& video : mSystemElements[mPrimary->getCursor()].videoComponents) {
+             video->pauseVideoPlayer();
+         }
++        if (mAmbientVideo)
++            mAmbientVideo->pauseVideoPlayer();
+     }
+     void muteViewVideos() override
+     {
+         for (auto& video : mSystemElements[mPrimary->getCursor()].videoComponents)
+             video->muteVideoPlayer();
++        if (mAmbientVideo)
++            mAmbientVideo->muteVideoPlayer();
+     }
+     void resetViewVideosTimer() override
+     {
+@@ -121,6 +135,12 @@ private:
+     void updateGameSelectors();
+     void renderElements(const glm::mat4& parentTrans, bool abovePrimary);
+ 
++    // Prism patch (2026-10-08): a background shared by all systems (theme elements named "ambient"
++    // (video) and "ambientStill" (image) in the system view), drawn below everything else and kept
++    // playing while navigating between systems, like the PS5 home screen.
++    std::unique_ptr<ImageComponent> mAmbientStill;
++    std::unique_ptr<VideoFFmpegComponent> mAmbientVideo;
++
+     struct SystemViewElements {
+         SystemData* system;
+         std::string name;
+diff --git a/es-core/src/FavoriteBurst.h b/es-core/src/FavoriteBurst.h
+new file mode 100644
+index 0000000..7e6d06b
+--- /dev/null
++++ b/es-core/src/FavoriteBurst.h
+@@ -0,0 +1,43 @@
++//  SPDX-License-Identifier: MIT
++//
++//  Prism patch (2026-10-08): star burst on a game's title in the list when it is marked as favorite.
++//  GamelistBase triggers it with the game's path, TextListComponent draws it on that row while it runs.
++//
++
++#ifndef ES_CORE_FAVORITE_BURST_H
++#define ES_CORE_FAVORITE_BURST_H
++
++#include <SDL2/SDL_timer.h>
++#include <string>
++
++namespace FavoriteBurst
++{
++    inline std::string sKey;
++    inline unsigned int sStart {0};
++    constexpr float DURATION {1150.0f};
++
++    // The clock starts on the first frame that draws the burst: re-sorting and repopulating the list after
++    // the favorite toggle takes a moment, and starting earlier would eat the pop-in.
++    inline void trigger(const std::string& key)
++    {
++        sKey = key;
++        sStart = 0;
++    }
++
++    // 0..1 while the burst runs, -1 when idle.
++    inline float progress()
++    {
++        if (sKey.empty())
++            return -1.0f;
++        if (sStart == 0)
++            sStart = SDL_GetTicks();
++        const float t {static_cast<float>(SDL_GetTicks() - sStart) / DURATION};
++        if (t >= 1.0f) {
++            sKey.clear();
++            return -1.0f;
++        }
++        return t;
++    }
++} // namespace FavoriteBurst
++
++#endif // ES_CORE_FAVORITE_BURST_H
+diff --git a/es-core/src/components/VideoComponent.h b/es-core/src/components/VideoComponent.h
+index dd08cef..aee0c67 100644
+--- a/es-core/src/components/VideoComponent.h
++++ b/es-core/src/components/VideoComponent.h
+@@ -89,6 +89,10 @@ public:
+ 
+     // Basic video controls.
+     void startVideoPlayer();
++    // Prism patch: lets SystemView keep a shared ambient video running across system changes.
++    bool isVideoPlaying() const { return mIsPlaying; }
++    bool isVideoPaused() const { return mPaused; }
++    void resumeVideoPlayer() { mPaused = false; }
+     virtual void stopVideoPlayer(bool muteAudio = true) {}
+     virtual void pauseVideoPlayer() {}
+ 
+diff --git a/es-core/src/components/primary/TextListComponent.h b/es-core/src/components/primary/TextListComponent.h
+index 6db13f1..02da798 100644
+--- a/es-core/src/components/primary/TextListComponent.h
++++ b/es-core/src/components/primary/TextListComponent.h
+@@ -9,6 +9,7 @@
+ #ifndef ES_CORE_COMPONENTS_PRIMARY_TEXT_LIST_COMPONENT_H
+ #define ES_CORE_COMPONENTS_PRIMARY_TEXT_LIST_COMPONENT_H
+ 
++#include "FavoriteBurst.h"
+ #include "Log.h"
+ #include "Sound.h"
+ #include "components/IList.h"
+@@ -51,6 +52,9 @@ public:
+     bool input(InputConfig* config, Input input) override;
+     void update(int deltaTime) override;
+     void render(const glm::mat4& parentTrans) override;
++    // Prism patch: neon star burst on a newly favorited game's row.
++    void renderFavoriteBurst(const glm::mat4& rowTrans, float rowHeight, float p);
++    std::unique_ptr<TextComponent> mBurstStar;
+     void applyTheme(const std::shared_ptr<ThemeData>& theme,
+                     const std::string& view,
+                     const std::string& element,
+@@ -374,6 +378,8 @@ template <typename T> void TextListComponent<T>::render(const glm::mat4& parentT
+                                                 mSelectedBackgroundMargins.y)),
+                     static_cast<int>(std::round(dim.y))});
+ 
++    const float burst {FavoriteBurst::progress()};
++
+     for (int i {startEntry}; i < listCutoff; ++i) {
+         Entry& entry {mEntries.at(i)};
+         unsigned int color {0x00000000};
+@@ -453,6 +459,11 @@ template <typename T> void TextListComponent<T>::render(const glm::mat4& parentT
+ 
+         entry.data.entryName->render(drawTrans);
+ 
++        if constexpr (std::is_same_v<T, FileData*>) {
++            if (burst >= 0.0f && entry.object->getFullPath() == FavoriteBurst::sKey)
++                renderFavoriteBurst(drawTrans, entry.data.entryName->getSize().y, burst);
++        }
++
+         offsetY += entrySize;
+     }
+     mRenderer->popClipRect();
+@@ -461,6 +472,47 @@ template <typename T> void TextListComponent<T>::render(const glm::mat4& parentT
+     GuiComponent::renderChildren(trans);
+ }
+ 
++template <typename T>
++void TextListComponent<T>::renderFavoriteBurst(const glm::mat4& rowTrans, float rowHeight, float p)
++{
++    // Redraw palette: pink, orange, yellow, lime, cyan, blue.
++    static const unsigned int colors[] {0xF0436F00, 0xF69F3C00, 0xFBE01A00, 0xB6D35100,
++                                        0x27B6D500, 0x29ABEB00, 0xF0436F00, 0xFBE01A00};
++    if (!mBurstStar) {
++        mBurstStar = std::make_unique<TextComponent>("\xef\x80\x85", mFont, 0xFFFFFFFF);
++        mBurstStar->setOrigin(0.5f, 0.5f);
++    }
++    auto ease = [](float x) {
++        x = glm::clamp(x, 0.0f, 1.0f);
++        return 1.0f - (1.0f - x) * (1.0f - x) * (1.0f - x);
++    };
++    const float fs {mFont->getSize()};
++    // Centred on the favorite star marker at the start of the title.
++    const glm::vec2 c {fs * 0.42f, rowHeight * 0.5f};
++
++    // Sparks: eight small stars flying out, spinning and fading.
++    const float sparkAlpha {glm::clamp(1.0f - p * 1.15f, 0.0f, 1.0f)};
++    for (int i {0}; i < 8; ++i) {
++        const float a {glm::radians(i * 45.0f + 22.5f)};
++        const float d {fs * (0.9f + 2.2f * ease(p * 1.6f))};
++        mBurstStar->setColor(colors[i] | static_cast<unsigned int>(sparkAlpha * 255.0f));
++        mBurstStar->setPosition(c.x + std::cos(a) * d, c.y + std::sin(a) * d * 0.8f, 0.0f);
++        mBurstStar->setScale(0.42f * (1.0f - 0.5f * p));
++        mBurstStar->setRotationDegrees(p * 220.0f + i * 20.0f);
++        mBurstStar->render(rowTrans);
++    }
++
++    // Hero star: pops in big over the marker, spins and settles onto it, then fades out.
++    // Visible at once (no grow-from-zero), quick overshoot, then settles onto the marker.
++    const float pop {p < 0.12f ? 1.6f + 0.7f * ease(p / 0.12f) : 2.3f - 1.3f * ease((p - 0.12f) / 0.4f)};
++    const float heroAlpha {p < 0.7f ? 1.0f : glm::clamp(1.0f - (p - 0.7f) / 0.3f, 0.0f, 1.0f)};
++    mBurstStar->setColor(0xFBE01A00 | static_cast<unsigned int>(heroAlpha * 255.0f));
++    mBurstStar->setPosition(c.x, c.y, 0.0f);
++    mBurstStar->setScale(pop);
++    mBurstStar->setRotationDegrees((1.0f - ease(p / 0.6f)) * -90.0f);
++    mBurstStar->render(rowTrans);
++}
++
+ template <typename T>
+ void TextListComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme,
+                                       const std::string& view,

@@ -1,0 +1,6 @@
+[Unit]
+Description=ES-DE nightly scrape of games without videos (ScreenScraper)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 @HOME@/prism/esde_night_scrape.py

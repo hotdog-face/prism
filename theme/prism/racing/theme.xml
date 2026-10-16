@@ -1,0 +1,4 @@
+<!-- Prism: own folder = its own home tile (CollectionCustomGrouping=unthemed) -->
+<theme>
+    <include>./../theme.xml</include>
+</theme>

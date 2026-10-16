@@ -1,0 +1,12 @@
+[Unit]
+Description=Prism supervisor: buttons + Steam-button card, screensaver, home watchdog, keyboard proxy
+After=graphical-session.target
+
+[Service]
+ExecStart=/usr/bin/python3 -u @HOME@/prism/switchhome.py
+Restart=always
+RestartSec=3
+Environment=IDLE_SECONDS=300
+
+[Install]
+WantedBy=default.target
