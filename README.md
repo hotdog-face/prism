@@ -5,6 +5,8 @@ games, your emulated games and (optionally) your Plex movies and TV, and it beha
 opens a quick-menu card over any game, controllers get player numbers in the order they're picked up, the screen
 dims and sleeps on its own, and docking to a TV switches resolution and controls without asking.
 
+**Case study and video:** [mitchellv.me/work/prism](https://www.mitchellv.me/work/prism) · by [Mitchell Vizensky](https://www.mitchellv.me), game UX designer
+
 Prism is built on [ES-DE](https://es-de.org) (with a small patch), its own theme, and a set of background services
 that run in Game Mode.
 
