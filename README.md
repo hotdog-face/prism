@@ -24,7 +24,7 @@ that run in Game Mode.
 
 ## Install
 
-1. In Desktop Mode, download this repository (Code > Download ZIP) and unpack it anywhere, for example in Downloads.
+1. In Desktop Mode, download **Prism-1.0.zip** from the [latest release](https://github.com/hotdog-face/prism/releases/latest) and unpack it anywhere, for example in Downloads.
 2. Open the unpacked folder, then `install`, and double-click **Install Prism**.
 3. Pick the extras you want. The installer asks once for the Deck's password (for the touchscreen and the Decky
    plugin); you can skip that step.
