@@ -7,6 +7,8 @@ dims and sleeps on its own, and docking to a TV switches resolution and controls
 
 **Case study and video:** [mitchellv.me/work/prism](https://www.mitchellv.me/work/prism) · by [Mitchell Vizensky](https://www.mitchellv.me), game UX designer
 
+If it's useful to you, you can [buy me a coffee on Ko-fi](https://ko-fi.com/Y4G62AHO0A). It helps keep these projects going.
+
 Prism is built on [ES-DE](https://es-de.org) (with a small patch), its own theme, and a set of background services
 that run in Game Mode.
 
